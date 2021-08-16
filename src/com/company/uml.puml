@@ -1,0 +1,66 @@
+@startuml tetris
+hide circle
+class Jugador{
+    nivel:int
+    puntaje:int
+    nombre:String
+    setNivel()
+    setPuntaje()
+    getNombre()
+}
+class Tetris{
+    piezaGuardada:Pieza
+    ventana:JFrame
+    pausar()
+    jugar()
+    moverPieza()
+    generarCuadricula()
+    crearJugador()
+    guardarPieza()
+    guardarEstadoActual()
+    guardarPuntaje()
+    salir()
+}
+class Cuadricula{
+    numeroColumnas:int
+    numeroFilas:int
+    columna:int
+    fila:int
+    agregarPieza()
+    limpiarCuadricula()
+    limpiarFila()
+} 
+class Celda{
+    color: String
+    posicionX: int
+    posicionY: int
+    cambiarColor()
+}
+abstract class Pieza{
+    forma:int[][]
+    velocidadCaida:int
+    rotarHorario()
+    moverDerecha()
+    moverIzquierda()
+    mostrarEnCuadricula()
+}
+
+class Cuadrado{}
+class Linea{}
+class T{}
+class S{}
+class Z{}
+class L{}
+class Linvertida{}
+Cuadricula->"[*,*]"Celda
+Pieza <|-- Cuadrado
+Pieza <|-- Linea
+Pieza <|-- T
+Pieza <|-- S
+Pieza <|-- Z
+Pieza <|-- L
+Pieza <|-- Linvertida
+Cuadricula <.. Pieza
+Tetris-->Jugador
+Tetris-->Cuadricula
+@enduml

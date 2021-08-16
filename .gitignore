@@ -1,0 +1,8 @@
+.vscode
+bin
+lib
+README.md
+Tetris.code-workspace
+.idea
+out
+Tetris.iml
