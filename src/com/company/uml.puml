@@ -1,4 +1,7 @@
 @startuml tetris
+
+note "Esto es una matriz bidimencional" as nota1
+
 hide circle
 class Jugador{
     nivel:int
@@ -52,7 +55,7 @@ class S{}
 class Z{}
 class L{}
 class Linvertida{}
-Cuadricula->"[*,*]"Celda
+Cuadricula->"*"Celda
 Pieza <|-- Cuadrado
 Pieza <|-- Linea
 Pieza <|-- T
@@ -63,4 +66,6 @@ Pieza <|-- Linvertida
 Cuadricula <.. Pieza
 Tetris-->Jugador
 Tetris-->Cuadricula
+Cuadricula .. nota1
+
 @enduml
