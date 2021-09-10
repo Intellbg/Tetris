@@ -1,0 +1,119 @@
+@startuml tetris
+
+note "Esto es una matriz bidimencional de celdas donde las celdas que forman una pieza se colocan" as nota1
+
+hide circle
+
+class Jugador{
+    nivel:int
+    puntaje:int
+    nombre:String
+    setNivel()
+    setPuntaje()
+    getNombre()
+}
+class Tetris{
+    - piezaActiva:Pieza
+    - cuadricula:Cuadricula
+    - proximasPiezas: ArrayList<Pieza> 
+
+    + iniciarSesion() 
+    + ponerPiezaEnCuadricula():Pieza
+    - generarPieza(): Pieza
+    + piezaActivaPuedeCaer(): boolean
+    + gameover(): boolean
+    + piezaActivaCae()
+    - generarNumeroRandom():int 
+    + ArrayList<Pieza> getProximasPiezas()
+    + moverPiezaActivaIzquierda()
+    + moverPiezaActivaDerecha() 
+    + getCuadricula():Cuadricula
+    + getPiezaActiva(): Pieza 
+
+    pausar()
+    crearJugador()
+    guardarPieza()
+    guardarEstadoActual()
+    guardarPuntaje()
+    salir()
+}
+class Cuadricula{
+    - NUMERO_FILAS_MAXIMO:int
+    - NUMERO_COLUMNAS_MAXIMO :int
+    - origenPiezasI:int
+    - origenPiezasJ:int
+    - celdas: Celda[][]
+
+    + getNUMERO_FILAS_MAXIMO(): int
+    + getNUMERO_COLUMNAS_MAXIMO(): int
+
+
+    + int limpiarFilasCompletas() 
+    + boolean verificarGameOver() 
+    + ponerPieza(Pieza pieza) 
+    + mostrarPieza(Pieza pieza)
+    + ocultarPieza(Pieza pieza)
+    + piezaPuedeCaer(Pieza pieza) :boolean
+    + getCeldas() :Celda[][] 
+    - getCelda(int fila,int columna):Celda
+
+
+    limpiarCuadricula()
+    limpiarFila()
+} 
+class Celda{
+    color: String
+    posicionX: int
+    posicionY: int
+
+    + getPosicionI()
+    + getPosicionJ()
+    + setPosicionI(int posicionI) 
+    + setPosicionJ(int posicionJ)
+
+    cambiarColor()
+    getValor() 
+}
+abstract class Pieza{
+    - forma : ArrayList<Celda>
+    - numeroColumnas: int
+    - numeroFilas: int
+    - color: int
+    + caer()
+    + moverIzquierda()
+    + moverDerecha() 
+    + pertenece(Celda celda): boolean
+    + ajustarCoordenadasCeldas(int origenPiezasI, int origenPiezasJ)
+    + getColor() : int
+    + getNumeroColumnas() : int
+    + getNumeroFilas() : int
+    + getForma() : ArrayList<Celda>
+
+
+    velocidadCaida:int
+    rotarHorario()
+    mostrarEnCuadricula()
+}
+
+class Cuadrado{}
+class Linea{}
+class T{}
+class S{}
+class Z{}
+class L{}
+class Linvertida{}
+Cuadricula->"*"Celda
+Pieza <|-- Cuadrado
+Pieza <|-- Linea
+Pieza <|-- T
+Pieza <|-- S
+Pieza <|-- Z
+Pieza <|-- L
+Pieza <|-- Linvertida
+Cuadricula ..> Pieza
+Celda "*" <-- Pieza  
+Tetris-->Jugador
+Tetris-->Cuadricula
+Cuadricula .. nota1
+
+@enduml

@@ -1,0 +1,45 @@
+@startuml tetris
+
+note "Ventana de juego" as nota1
+note "Muestra ArrayList<Pieza> proximasPiezas de Tetris" as nota2
+note "Muestra Cuadricula de Tetris" as nota3
+
+hide circle
+
+class DesktopGui{
+}
+
+class DisplayHighScores{
+}
+
+class DisplayMenuPrincipal{
+} 
+
+class DisplayTetris{    
+}
+
+class PanelCelda{
+}
+
+class PanelJugadorInfo{
+}
+
+class PanelGridCeldas{
+}
+
+class PanelSiguientesPiezas{
+}
+
+DesktopGui--> DisplayHighScores
+DesktopGui--> DisplayMenuPrincipal
+DesktopGui--> DisplayTetris
+DisplayTetris -->PanelJugadorInfo
+DisplayTetris -->PanelSiguientesPiezas
+DisplayTetris -->PanelGridCeldas
+PanelGridCeldas -->"*"PanelCelda
+PanelSiguientesPiezas ->"3" PanelGridCeldas
+
+DisplayTetris . nota1
+PanelSiguientesPiezas .. nota2
+PanelGridCeldas ..nota3
+@enduml
