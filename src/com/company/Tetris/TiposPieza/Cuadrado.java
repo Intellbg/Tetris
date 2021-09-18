@@ -1,7 +1,6 @@
-package com.company.TiposPieza;
+package com.company.Tetris.TiposPieza;
 
-import com.company.Celda;
-import com.company.Pieza;
+import com.company.Tetris.*;
 
 public class Cuadrado extends Pieza {
 

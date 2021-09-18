@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.*;
 import com.company.*;
+import com.company.Tetris.Pieza;
 
 public class PanelSiguientesPiezas extends JPanel {
     Color color=Color.lightGray;

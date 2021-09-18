@@ -1,23 +1,37 @@
-package com.company;
+package com.company.Tetris;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
-
-import com.company.TiposPieza.*;
+import com.company.Tetris.TiposPieza.*;
 
 public class Tetris {
 
     private static Cuadricula cuadricula;
     private static ArrayList<Pieza> proximasPiezas = new ArrayList<>();
     private static Pieza piezaActiva;
+    private static Pieza piezaGuardada;
     private static Jugador jugador;
 
     public static void iniciarSesion() {
-        jugador=new Jugador("Invitado 201");
+        jugador = new Jugador("Invitado");
         cuadricula = new Cuadricula();
         for (int i = 0; i < 3; i++) {
             proximasPiezas.add(generarPieza());
         }
+    }
+
+    public static void guardarPieza(){
+        cuadricula.ocultarPieza(piezaActiva);
+        if (piezaGuardada==null){
+            piezaGuardada=piezaActiva;
+            ponerPiezaEnCuadricula();
+            return;
+        }
+        Pieza temporal=piezaActiva;
+        piezaActiva=piezaGuardada;
+        piezaGuardada=temporal;
+        cuadricula.ponerPieza(piezaActiva);
     }
 
     public static Pieza ponerPiezaEnCuadricula() {
@@ -27,12 +41,12 @@ public class Tetris {
         return piezaActiva;
     }
 
-    public static boolean piezaActivaPuedeCaer(){
+    public static boolean piezaActivaPuedeCaer() {
         return cuadricula.piezaPuedeCaer(piezaActiva);
     }
 
-    public static void piezaActivaCae(){
-        if (cuadricula.piezaPuedeCaer(piezaActiva)){
+    public static void piezaActivaCae() {
+        if (cuadricula.piezaPuedeCaer(piezaActiva)) {
             cuadricula.ocultarPieza(piezaActiva);
             piezaActiva.caer();
             cuadricula.mostrarPieza(piezaActiva);
@@ -65,7 +79,7 @@ public class Tetris {
         return rand.nextInt(7);
     }
 
-    public static boolean gameover(){
+    public static boolean verificarGameover() {
         return cuadricula.verificarGameOver();
     }
 
@@ -82,7 +96,7 @@ public class Tetris {
     }
 
     public static void moverPiezaActivaIzquierda() {
-        if(cuadricula.piezaPuedeMoverIzquierda(piezaActiva)){
+        if (cuadricula.piezaPuedeMoverIzquierda(piezaActiva)) {
             cuadricula.ocultarPieza(piezaActiva);
             piezaActiva.moverIzquierda();
             cuadricula.mostrarPieza(piezaActiva);
@@ -90,29 +104,50 @@ public class Tetris {
     }
 
     public static void moverPiezaActivaDerecha() {
-        if(cuadricula.piezaPuedeMoverDerecha(piezaActiva)){
+        if (cuadricula.piezaPuedeMoverDerecha(piezaActiva)) {
             cuadricula.ocultarPieza(piezaActiva);
             piezaActiva.moverDerecha();
             cuadricula.mostrarPieza(piezaActiva);
         }
     }
 
-    public static void limpiarFilasCompletas() {
-        jugador.setPuntaje(cuadricula.limpiarFilasCompletas(piezaActiva));
+    public static void asignarPuntaje() {
+        int puntaje = cuadricula.limpiarFilasCompletas(obtenerPosiblesFilasCompletas());
+        if (puntaje == 400) {
+            jugador.subirNivel();
+        }
+        jugador.sumarPuntaje(puntaje);
+
     }
 
-
-    public static void cargarJuego(){
+    public static void cargarJuego() {
 
     }
 
-    public static int getPuntaje(){
+    public static int getPuntaje() {
         return jugador.getPuntaje();
     }
 
-    public static void rotarPiezaActiva(){
+    public static void rotarPiezaActiva() {
         cuadricula.ocultarPieza(piezaActiva);
         piezaActiva.rotatarAntiHorario();
         cuadricula.mostrarPieza(piezaActiva);
     }
+
+    public static int getNivel() {
+        return jugador.getNivel();
+    }
+
+    private static ArrayList<Integer> obtenerPosiblesFilasCompletas() {
+        ArrayList<Integer> posiblesFilasCompletas = new ArrayList<Integer>();
+        for (Celda celda : piezaActiva.getForma()) {
+            if (!posiblesFilasCompletas.contains(celda.getCoordenadaI())) {
+                posiblesFilasCompletas.add(celda.getCoordenadaI());
+            }
+        }
+        Collections.sort(posiblesFilasCompletas);
+        return posiblesFilasCompletas;
+    }
+
+    
 }

@@ -1,14 +1,10 @@
 package com.company.DesktopGui;
 
-import java.awt.HeadlessException;
 import java.util.ArrayList;
 
 import javax.swing.*;
-
-import com.company.Cuadricula;
-import com.company.Pieza;
-
 import java.awt.*;
+import com.company.Tetris.*;
 
 public class DesktopGui extends JFrame{
     static Container mainContainer;

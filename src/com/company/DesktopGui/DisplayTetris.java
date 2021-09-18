@@ -1,7 +1,6 @@
 package com.company.DesktopGui;
 
-import com.company.*;
-
+import com.company.Tetris.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.company.DesktopGui;
 
-import com.company.*;
+import com.company.Tetris.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -68,7 +68,7 @@ public class PanelGridCeldas extends JPanel implements KeyListener {
     }
 
     private void pintarCelda(Celda celda) {
-        gridCeldas[celda.getPosicionI()][celda.getPosicionJ()].cambiarColor(celda.getColor());
+        gridCeldas[celda.getCoordenadaI()][celda.getCoordenadaJ()].cambiarColor(celda.getColor());
     }
 
 
@@ -117,8 +117,12 @@ public class PanelGridCeldas extends JPanel implements KeyListener {
             case 82:
                 Tetris.rotarPiezaActiva();
                 break;
+            case 67:
+                Tetris.guardarPieza();
+                break;
         }
         actualizar(Tetris.getCuadricula()); 
+        //System.out.println(e.getKeyCode());
      
     }
     

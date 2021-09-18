@@ -1,8 +1,8 @@
-package com.company;
+package com.company.Tetris;
 
 import java.util.*;
-
-import com.company.TiposPieza.Linea;
+import com.company.Tetris.*;
+import com.company.Tetris.TiposPieza.*;
 
 public abstract class Pieza {
     private ArrayList<Celda> forma;
@@ -13,8 +13,8 @@ public abstract class Pieza {
 
     public Pieza(int color, Celda... celda) {
         this.forma = new ArrayList<Celda>(Arrays.asList(celda));
-        this.numeroFilas = Collections.max(forma, new comparePositionI()).getPosicionI();
-        this.numeroColumnas = Collections.max(forma, new comparePositionJ()).getPosicionJ();
+        this.numeroFilas = Collections.max(forma, new comparePositionI()).getCoordenadaI();
+        this.numeroColumnas = Collections.max(forma, new comparePositionJ()).getCoordenadaJ();
         this.color = color;
         asignarColorCeldas();
     }
@@ -29,29 +29,22 @@ public abstract class Pieza {
         return color;
     }
 
-    public int getNumeroColumnas() {
-        return numeroColumnas;
-    }
-
-    public int getNumeroFilas() {
-        return numeroFilas;
-    }
-
     public void caer() {
         for (Celda celda : forma) {
-            celda.setPosicionI(celda.getPosicionI() + 1);
+            celda.moverAbajo();
         }
     }
 
     public void moverIzquierda() {
         for (Celda celda : forma) {
-            celda.setPosicionJ(celda.getPosicionJ() - 1);
+            celda.moverIzquierda();
         }
     }
 
     public void moverDerecha() {
         for (Celda celda : forma) {
-            celda.setPosicionJ(celda.getPosicionJ() + 1);
+            celda.moverDerecha();
+            ;
         }
     }
 
@@ -64,15 +57,14 @@ public abstract class Pieza {
             origenPiezasJ = 3;
         }
         for (Celda celda : forma) {
-            celda.setPosicionI(origenPiezasI + celda.getPosicionI());
-            celda.setPosicionJ(origenPiezasJ + celda.getPosicionJ());
+            celda.setPosicion(origenPiezasI + celda.getCoordenadaI(), origenPiezasJ + celda.getCoordenadaJ());
         }
     }
 
-    private void coordenadasOrigenRelativo(int origenI, int origenJ) {
+    private void ponerCoordenadasOrigenRelativo(int origenI, int origenJ) {
         for (Celda celda : forma) {
-            celda.setPosicionI(origenI + celda.getPosicionI());
-            celda.setPosicionJ(origenJ + celda.getPosicionJ());
+            celda.setCoordenadaI(origenI + celda.getCoordenadaI());
+            celda.setCoordenadaJ(origenJ + celda.getCoordenadaJ());
         }
     }
 
@@ -82,21 +74,20 @@ public abstract class Pieza {
 
     public void rotatarAntiHorario() {
         int temp;
-        int coordRotacionI = Collections.min(forma, new comparePositionI()).getPosicionI();
-        int coordRotacionJ = Collections.min(forma, new comparePositionJ()).getPosicionJ();
+        int coordRotacionI = Collections.min(forma, new comparePositionI()).getCoordenadaI();
+        int coordRotacionJ = Collections.min(forma, new comparePositionJ()).getCoordenadaJ();
         if (horizontal) {
             coordRotacionJ = coordRotacionJ + 1;
         }
         if (!horizontal) {
             coordRotacionI = coordRotacionI + 1;
         }
-        coordenadasOrigenRelativo(-coordRotacionI, -coordRotacionJ);
+        ponerCoordenadasOrigenRelativo(-coordRotacionI, -coordRotacionJ);
         for (Celda celda : forma) {
-            temp = celda.getPosicionI();
-            celda.setPosicionI(celda.getPosicionJ());
-            celda.setPosicionJ(numeroFilas - 1 - temp);
+            temp = celda.getCoordenadaI();
+            celda.setPosicion(celda.getCoordenadaJ(),numeroFilas - 1 - temp);
         }
-        coordenadasOrigenRelativo(coordRotacionI, coordRotacionJ);
+        ponerCoordenadasOrigenRelativo(coordRotacionI, coordRotacionJ);
         horizontal = !horizontal;
     }
     // TODO: Componente cuadricula permita la rotacion de pieza activa

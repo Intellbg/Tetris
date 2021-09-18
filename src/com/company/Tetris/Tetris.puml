@@ -44,8 +44,6 @@ class Cuadricula{
     - origenPiezasJ:int
     - celdas: Celda[][]
 
-    + getNUMERO_FILAS_MAXIMO(): int
-    + getNUMERO_COLUMNAS_MAXIMO(): int
 
 
     + int limpiarFilasCompletas() 
@@ -63,13 +61,13 @@ class Cuadricula{
 } 
 class Celda{
     color: String
-    posicionX: int
-    posicionY: int
+    coordenadaX: int
+    coordenadaY: int
 
-    + getPosicionI()
-    + getPosicionJ()
-    + setPosicionI(int posicionI) 
-    + setPosicionJ(int posicionJ)
+    + getCoordenadaI()
+    + getCoordenadaJ()
+    + setCoordenadaI(int coordenadaI) 
+    + setCoordenadaJ(int coordenadaJ)
 
     cambiarColor()
     getValor() 
