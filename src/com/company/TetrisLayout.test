@@ -1,13 +1,13 @@
 package com.company;
 
+
+
 import com.company.DesktopGui.DesktopGui;
-import com.company.Tetris.GestorDeArchivos;
 import com.company.Tetris.Tetris;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(GestorDeArchivos.obtenerMejoresJugadores());
-        Tetris.cargarJuego("Tetris_ELPIPO1800.txt");
+        Tetris.iniciarSesion("ELPIPO");
         DesktopGui desktopGui=new DesktopGui();
         while(!Tetris.verificarGameover()){
             Tetris.ponerPiezaEnCuadricula();    
@@ -22,12 +22,13 @@ public class Main {
                     }
                     Tetris.piezaActivaMovimientoPrincipal();        
                     desktopGui.actualizarGridDeJuego(Tetris.getCuadricula());          
-                }else{
-                    System.out.println();
                 }
+                System.out.println();
             }
             Tetris.asignarPuntaje();
         }
-        Tetris.finalizarSesion();
+
+        System.out.println("GG WP");
+        System.out.println(Tetris.getPuntaje());
     }
 }

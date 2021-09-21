@@ -1,6 +1,8 @@
 package com.company.Tetris;
 
-public class Jugador {
+import java.io.Serializable;
+
+public class Jugador implements Serializable{
     private String nombre;
     private int puntaje;
     private int nivel;
@@ -21,6 +23,10 @@ public class Jugador {
 
     public int getPuntaje() {
         return puntaje;
+    }
+
+    public String getNombre() {
+        return nombre;
     }
 
     public int getNivel() {

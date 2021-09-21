@@ -1,6 +1,8 @@
 package com.company.DesktopGui;
 
 import com.company.Tetris.*;
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -8,7 +10,8 @@ import java.util.ArrayList;
 public class DisplayTetris extends JPanel {
 
     static PanelGridCeldas gridDeJuego;
-    static PanelSiguientesPiezas panelSiguientesPiezas;
+    static PanelGridCeldas piezaGuardada;
+    static PanelSiguientesPiezas siguientesPiezas;
 
     public DisplayTetris() {
         setLayout(new FlowLayout());
@@ -19,8 +22,8 @@ public class DisplayTetris extends JPanel {
 
         leftPanel.add(new PanelJugadorInfo());
 
-        panelSiguientesPiezas = new PanelSiguientesPiezas();
-        leftPanel.add(panelSiguientesPiezas);
+        siguientesPiezas = new PanelSiguientesPiezas();
+        leftPanel.add(siguientesPiezas);
 
         JPanel opciones = new JPanel(new FlowLayout());
         opciones.setBackground(Color.BLACK);
@@ -38,7 +41,7 @@ public class DisplayTetris extends JPanel {
     }
 
     public void actualizarProximasPiezas(ArrayList<Pieza> piezas){
-        panelSiguientesPiezas.actualizar(piezas);
+        siguientesPiezas.actualizar(piezas);
     }
     
     public void actualizarGridDeJuego(Cuadricula cuadricula){

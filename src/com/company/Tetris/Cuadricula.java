@@ -1,17 +1,42 @@
 package com.company.Tetris;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cuadricula {
-    private int NUMERO_FILAS_MAXIMO = 20;
-    private int NUMERO_COLUMNAS_MAXIMO = 10;
-    private Celda[][] celdas;
+import com.company.Tetris.TiposPieza.Linea;
+
+public class Cuadricula implements Serializable{
+    public final int NUMERO_FILAS_MAXIMO = 20;
+    public final int NUMERO_COLUMNAS_MAXIMO = 10;
+    private Bloque[][] bloques;
 
     private int origenPiezasI = 0;
     private int origenPiezasJ = 4;
 
     public Cuadricula() {
-        this.celdas = new Celda[NUMERO_FILAS_MAXIMO][NUMERO_COLUMNAS_MAXIMO];
+        this.bloques = new Bloque[NUMERO_FILAS_MAXIMO][NUMERO_COLUMNAS_MAXIMO];
+    }
+
+    // Metodos administracion de bloques
+    public void mostartPiezaEnOrigen(Pieza pieza) {
+        if (pieza instanceof Linea) {
+            pieza.ajustarCoordenadasBloquesForma(origenPiezasI, 3);
+            mostrarPieza(pieza);
+            return;
+        }
+        pieza.ajustarCoordenadasBloquesForma(origenPiezasI, origenPiezasJ);
+        mostrarPieza(pieza);
+    }
+
+    public void mostrarPieza(Pieza pieza) {
+        for (Bloque bloque : pieza.getForma()) {
+            bloques[bloque.getCoordenadaI()][bloque.getCoordenadaJ()] = bloque;
+        }
+    }
+
+    public void ocultarPieza(Pieza pieza) {
+        for (Bloque bloque : pieza.getForma()) {
+            bloques[bloque.getCoordenadaI()][bloque.getCoordenadaJ()] = null;
+        }
     }
 
     public int limpiarFilasCompletas(ArrayList<Integer> filas) {
@@ -25,29 +50,79 @@ public class Cuadricula {
         return puntos;
     }
 
-
-
     private void limpiarFilaCompleta(int fila) {
         int filaAnterior;
         for (int i = fila; i > 0; i--) {
             filaAnterior = i - 1;
             if (filaAnterior < 0) {
                 for (int j = 0; j < NUMERO_COLUMNAS_MAXIMO; j++) {
-                    celdas[i][j] = null;
+                    bloques[i][j] = null;
                 }
             }
             for (int j = 0; j < NUMERO_COLUMNAS_MAXIMO; j++) {
-                celdas[i][j] = celdas[filaAnterior][j];
-                if (celdas[i][j] != null) {
-                    celdas[i][j].setPosicion(i,j);
+                bloques[i][j] = bloques[filaAnterior][j];
+                if (bloques[i][j] != null) {
+                    bloques[i][j].setPosicion(i, j);
                 }
+            }
+        }
+    }
+
+    // Metodos de control
+    public void piezaPuedeMover(Pieza piezaPosicionFutura) throws Exception {
+        ArrayList<Bloque> bloquesPosicionFutura = piezaPosicionFutura.getForma();
+        estaBloqueFueraGridJuego(bloquesPosicionFutura);
+        estaEspacioOcupado(bloquesPosicionFutura);
+    }
+
+    public void piezaPuedeRotar(Pieza piezaRotada) throws Exception{
+        ArrayList<Bloque> bloquesPosicionFutura = piezaRotada.getForma();
+        try {
+            estaBloqueFueraGridJuego(bloquesPosicionFutura);
+        } catch (Exception e) {
+            if (e.getMessage() == "Desborde Derecho") {
+                if (piezaRotada instanceof Linea) {
+                    piezaRotada.ajustarCoordenadasBloquesForma(0, -2);
+                }
+                piezaRotada.ajustarCoordenadasBloquesForma(0, -1);
+            }
+        }finally{
+            estaEspacioOcupado(bloquesPosicionFutura);
+        }
+    }
+
+    private boolean estaEspacioOcupado(ArrayList<Bloque> bloquesEnPosicionFutura) throws Exception {
+        for (Bloque bloque : bloquesEnPosicionFutura) {
+            Bloque bloqueDeCuadricula = getBloque(bloque.getCoordenadaI(), bloque.getCoordenadaJ());
+            if (bloqueDeCuadricula != null) {
+                if (!bloquesEnPosicionFutura.contains(bloqueDeCuadricula)) {
+                    throw new Exception("Posicion Ocupada");
+                }
+            }
+        }
+        return false;
+    }
+
+    private void estaBloqueFueraGridJuego(ArrayList<Bloque> bloquesEnPosicionFutura) throws Exception {
+        for (Bloque bloque : bloquesEnPosicionFutura) {
+            if (bloque.getCoordenadaI() >= NUMERO_FILAS_MAXIMO) {
+                throw new Exception("Desborde Inferior");
+            }
+            if (bloque.getCoordenadaI() < 0) {
+                throw new Exception("Desborde Superior");
+            }
+            if (bloque.getCoordenadaJ() >= NUMERO_COLUMNAS_MAXIMO) {
+                throw new Exception("Desborde Derecho");
+            }
+            if (bloque.getCoordenadaJ() < 0) {
+                throw new Exception("Desborde Izquierdo");
             }
         }
     }
 
     public boolean estaFilaCompleta(int fila) {
         for (int columna = 0; columna < NUMERO_COLUMNAS_MAXIMO; columna++) {
-            if (celdas[fila][columna] == null) {
+            if (bloques[fila][columna] == null) {
                 return false;
             }
         }
@@ -57,7 +132,7 @@ public class Cuadricula {
     public boolean verificarGameOver() {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < NUMERO_COLUMNAS_MAXIMO; j++) {
-                if (celdas[i][j] != null) {
+                if (bloques[i][j] != null) {
                     return true;
                 }
             }
@@ -65,87 +140,26 @@ public class Cuadricula {
         return false;
     }
 
-    public void ponerPieza(Pieza pieza) {
-        pieza.ajustarCoordenadasCeldas(this.origenPiezasI, this.origenPiezasJ);
-        for (Celda celda : pieza.getForma()) {
-            celdas[celda.getCoordenadaI()][celda.getCoordenadaJ()] = celda;
-        }
+    // Getters
+    private Bloque getBloque(int fila, int columna) {
+        return bloques[fila][columna];
     }
 
-    public void mostrarPieza(Pieza pieza) {
-        for (Celda celda : pieza.getForma()) {
-            celdas[celda.getCoordenadaI()][celda.getCoordenadaJ()] = celda;
-        }
+    public Bloque[][] getBloques() {
+        return bloques;
     }
 
-    public void ocultarPieza(Pieza pieza) {
-        for (Celda celda : pieza.getForma()) {
-            celdas[celda.getCoordenadaI()][celda.getCoordenadaJ()] = null;
-        }
-    }
-
-    public boolean piezaPuedeCaer(Pieza pieza) {
-        for (Celda celda : pieza.getForma()) {
-            if (celda.getCoordenadaI() >= NUMERO_FILAS_MAXIMO - 1) {
-                return false;
-            }
-            Celda celdaDeAbajo = getCelda(celda.getCoordenadaI() + 1, celda.getCoordenadaJ());
-            if (celdaDeAbajo != null) {
-                if (!pieza.pertenece(celdaDeAbajo)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public boolean piezaPuedeMoverIzquierda(Pieza pieza) {
-        for (Celda celda : pieza.getForma()) {
-            if (celda.getCoordenadaJ() - 1 < 0) {
-                return false;
-            }
-            Celda celdaDeIzquierda = getCelda(celda.getCoordenadaI(), celda.getCoordenadaJ() - 1);
-            if (celdaDeIzquierda != null) {
-                if (!pieza.pertenece(celdaDeIzquierda)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public boolean piezaPuedeMoverDerecha(Pieza pieza) {
-        for (Celda celda : pieza.getForma()) {
-            if (celda.getCoordenadaJ() + 1 >= NUMERO_COLUMNAS_MAXIMO) {
-                return false;
-            }
-            Celda celdaDeIzquierda = getCelda(celda.getCoordenadaI(), celda.getCoordenadaJ() + 1);
-            if (celdaDeIzquierda != null) {
-                if (!pieza.pertenece(celdaDeIzquierda)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private Celda getCelda(int fila, int columna) {
-        return celdas[fila][columna];
-    }
-
-    public Celda[][] getCeldas() {
-        return celdas;
-    }
-
+    // Metodos auxiliares
     @Override
     public String toString() {
         String cuadricula = "";
         for (int i = 0; i < NUMERO_FILAS_MAXIMO; i++) {
             for (int j = 0; j < NUMERO_COLUMNAS_MAXIMO; j++) {
-                if (this.celdas[i][j] == null) {
+                if (this.bloques[i][j] == null) {
                     cuadricula += "* ";
                 } else {
-                    cuadricula += this.celdas[i][j] + " ";
+                    cuadricula += "0 ";
+                    // cuadricula += this.bloques[i][j]. + " ";
                 }
             }
             cuadricula += "\n";

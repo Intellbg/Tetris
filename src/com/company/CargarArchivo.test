@@ -1,12 +1,10 @@
 package com.company;
 
 import com.company.DesktopGui.DesktopGui;
-import com.company.Tetris.GestorDeArchivos;
 import com.company.Tetris.Tetris;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(GestorDeArchivos.obtenerMejoresJugadores());
         Tetris.cargarJuego("Tetris_ELPIPO1800.txt");
         DesktopGui desktopGui=new DesktopGui();
         while(!Tetris.verificarGameover()){
@@ -27,6 +25,7 @@ public class Main {
                 }
             }
             Tetris.asignarPuntaje();
+            System.out.println(Tetris.getPuntaje());
         }
         Tetris.finalizarSesion();
     }

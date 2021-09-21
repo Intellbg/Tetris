@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PanelCelda extends JPanel{
-    int color=9;
     public PanelCelda() {
         setBorder(BorderFactory.createLineBorder(Color.black));
     }
@@ -12,34 +11,36 @@ public class PanelCelda extends JPanel{
         setBackground(color);
     }
 
-    public void cambiarColor(int color){
+    public void cambiarColor(String color){
         setBorder(BorderFactory.createLineBorder(Color.black));
         switch(color){
-            case 0:
+            case "verde":
                 setBackground(Color.green);
                 break;
-            case 1:
+            case "cyan":
                 setBackground(Color.cyan);
                 break;
-            case 2:
+            case "negro":
                 setBackground(Color.black);
                 break;
-            case 3:
+            case "azul":
                 setBackground(Color.blue);
                 break;
-            case 4:
+            case "amarillo":
                 setBackground(Color.yellow);
                 break;
-            case 5:
+            case "tomate":
                 setBackground(Color.orange);
                 break;
-            case 6:
+            case "rojo":
                 setBackground(Color.red);
                 break;
+            case "morado":
+                setBackground(Color.magenta);
+                break;
             default:
-                setBackground(Color.white);
+                setBackground(Color.black);
         }
-        this.color=color;
         repaint();
     }
     

@@ -5,8 +5,12 @@ import com.company.Tetris.*;
 public class Cuadrado extends Pieza {
 
     public Cuadrado() {
-        super(1,new Celda(0, 0),new Celda(0, 1),new Celda(1, 0),new Celda(1, 1));
+        super("amarillo", new Bloque(0, 0), new Bloque(0, 1), new Bloque(1, 0), new Bloque(1, 1));
     }
-    @Override
-    public void rotatarAntiHorario(){}
+
+    public void rotarAntiHorario() {
+    }
+
+    public void rotarHorario() {
+    }
 }

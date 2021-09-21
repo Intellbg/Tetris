@@ -1,48 +1,16 @@
 package com.company.Tetris;
 
-public class Celda {
-    private int color;
+import java.io.Serializable;
+
+public class Bloque implements Serializable{
+    private String color;
     private int coordenadaI;
     private int coordenadaJ;
 
-    public Celda(int coordenadaI, int coordenadaJ) {
-        this.color = 100;
+    public Bloque(int coordenadaI, int coordenadaJ) {
+        this.color="blanco";
         this.coordenadaI = coordenadaI;
         this.coordenadaJ = coordenadaJ;
-    }
-
-    public void setPosicion(int coordenadaI, int coordenadaJ) {
-        this.coordenadaI = coordenadaI;
-        this.coordenadaJ = coordenadaJ;
-    }
-
-    public void setCoordenadaI(int coordenadaI) {
-        this.coordenadaI = coordenadaI;
-    }
-
-    public void setCoordenadaJ(int coordenadaJ) {
-        this.coordenadaJ = coordenadaJ;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
-
-    public int getCoordenadaI() {
-        return coordenadaI;
-    }
-
-    public int getCoordenadaJ() {
-        return coordenadaJ;
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    @Override
-    public String toString() {
-        return Integer.toString(color);
     }
 
     public void moverAbajo() {
@@ -59,6 +27,41 @@ public class Celda {
 
     public void moverIzquierda() {
         coordenadaJ--;
+    }
+
+    public void setPosicion(int coordenadaI, int coordenadaJ) {
+        this.coordenadaI = coordenadaI;
+        this.coordenadaJ = coordenadaJ;
+    }
+
+    public void setCoordenadaI(int coordenadaI) {
+        this.coordenadaI = coordenadaI;
+    }
+
+    public void setCoordenadaJ(int coordenadaJ) {
+        this.coordenadaJ = coordenadaJ;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public int getCoordenadaI() {
+        return coordenadaI;
+    }
+
+    public int getCoordenadaJ() {
+        return coordenadaJ;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void transponerCoordenadas() {
+        int coordenadaTemporal=coordenadaI;
+        coordenadaI=coordenadaJ;
+        coordenadaJ=coordenadaTemporal;
     }
 
 }

@@ -1,94 +1,138 @@
 package com.company.Tetris;
 
 import java.util.*;
-import com.company.Tetris.*;
-import com.company.Tetris.TiposPieza.*;
 
 public abstract class Pieza {
-    private ArrayList<Celda> forma;
-    private int numeroColumnas;
-    private int numeroFilas;
-    private int color;
-    private boolean horizontal = true;
+    protected ArrayList<Bloque> forma;
+    protected int numeroFilas;
+    protected int numeroColumnas;
+    protected boolean estaColocada;
+    private boolean tieneHorientacionVertical;
+    private String color;
 
-    public Pieza(int color, Celda... celda) {
-        this.forma = new ArrayList<Celda>(Arrays.asList(celda));
-        this.numeroFilas = Collections.max(forma, new comparePositionI()).getCoordenadaI();
-        this.numeroColumnas = Collections.max(forma, new comparePositionJ()).getCoordenadaJ();
+    public Pieza(String color, Bloque... bloque) {
+        this.forma = new ArrayList<Bloque>(Arrays.asList(bloque));
+        this.numeroFilas = obtenerCoordenadaMaximaI();
+        this.numeroColumnas =obtenerCoordenadaMaximaJ();
         this.color = color;
-        asignarColorCeldas();
+        this.estaColocada = false;
+        this.tieneHorientacionVertical = false;
+        asignarColorBloques();
     }
 
-    public void asignarColorCeldas() {
-        for (Celda celda : forma) {
-            celda.setColor(this.color);
+    public void asignarColorBloques() {
+        for (Bloque bloque : forma) {
+            bloque.setColor(this.color);
         }
     }
 
-    public int getColor() {
-        return color;
+    // Metodos de movimiento
+    public void moverAbajo() {
+        for (Bloque bloque : forma) {
+            bloque.moverAbajo();
+        }
     }
 
-    public void caer() {
-        for (Celda celda : forma) {
-            celda.moverAbajo();
+    public void moverArriba() {
+        for (Bloque bloque : forma) {
+            bloque.moverArriba();
         }
     }
 
     public void moverIzquierda() {
-        for (Celda celda : forma) {
-            celda.moverIzquierda();
+        for (Bloque bloque : forma) {
+            bloque.moverIzquierda();
         }
     }
 
     public void moverDerecha() {
-        for (Celda celda : forma) {
-            celda.moverDerecha();
-            ;
+        for (Bloque bloque : forma) {
+            bloque.moverDerecha();
         }
     }
 
-    public ArrayList<Celda> getForma() {
+    public void rotarHorario() {
+        int coordRotacionI = obtenerCoordenadaMinimaI();
+        int coordRotacionJ = obtenerCoordenadaMinimaJ();
+        ajustarCoordenadasBloquesForma(-coordRotacionI, -coordRotacionJ);
+        for (Bloque bloque : forma) {
+            bloque.setPosicion(bloque.getCoordenadaJ(), numeroFilas - 1 - bloque.getCoordenadaI());
+        }
+        if (tieneHorientacionVertical) {
+            coordRotacionJ++;
+        }
+        ajustarCoordenadasBloquesForma(coordRotacionI, coordRotacionJ + 1);
+        tieneHorientacionVertical = !tieneHorientacionVertical;
+    }
+
+    public void rotarAntiHorario() {
+        int coordRotacionI = obtenerCoordenadaMinimaI();
+        int coordRotacionJ = obtenerCoordenadaMinimaJ();
+        ajustarCoordenadasBloquesForma(-coordRotacionI, -coordRotacionJ);
+        for (Bloque bloque : forma) {
+            bloque.setPosicion(numeroColumnas - 1 - bloque.getCoordenadaJ(), bloque.getCoordenadaI());
+        }
+        if (!tieneHorientacionVertical) {
+            coordRotacionI++;
+        }
+        ajustarCoordenadasBloquesForma(coordRotacionI, coordRotacionJ);
+        tieneHorientacionVertical = !tieneHorientacionVertical;
+    }
+
+    // Metodos de control
+    public boolean estaColocada() {
+        return estaColocada;
+    }
+
+    public boolean bloquePerteneceAPieza(Bloque bloque) {
+        return forma.contains(bloque);
+    }
+
+    // Metodos auxiliares
+    public void marcarPiezaComoColocada() {
+        estaColocada = true;
+    }
+
+    public void resetCoordenadas(){
+        ajustarCoordenadasBloquesForma(-obtenerCoordenadaMinimaI(), -obtenerCoordenadaMinimaJ());
+    }
+
+    protected void transponerCoordenadasBloquesForma() {
+        for (Bloque bloque : forma) {
+            bloque.transponerCoordenadas();
+        }
+    }
+
+    protected void ajustarCoordenadasBloquesForma(int origenPiezasI, int origenPiezasJ) {
+        for (Bloque bloque : forma) {
+            bloque.setPosicion(origenPiezasI + bloque.getCoordenadaI(), origenPiezasJ + bloque.getCoordenadaJ());
+        }
+    }
+
+
+    protected int obtenerCoordenadaMinimaI() {
+        Bloque bloqueMasIzquierdo = Collections.min(forma, (a, b) -> a.getCoordenadaI() - b.getCoordenadaI());
+        return bloqueMasIzquierdo.getCoordenadaI();
+    }
+
+    protected int obtenerCoordenadaMinimaJ() {
+        Bloque bloqueMasAlto = Collections.min(forma, (a, b) -> a.getCoordenadaJ() - b.getCoordenadaJ());
+        return bloqueMasAlto.getCoordenadaJ();
+    }
+
+    protected int obtenerCoordenadaMaximaJ() {
+        Bloque bloqueMasDerecho = Collections.max(forma, (a, b) -> a.getCoordenadaJ() - b.getCoordenadaJ());
+        return bloqueMasDerecho.getCoordenadaJ();
+    }
+
+    protected int obtenerCoordenadaMaximaI() {
+        Bloque bloqueMasBajo = Collections.max(forma, (a, b) -> a.getCoordenadaI() - b.getCoordenadaI());
+        return bloqueMasBajo.getCoordenadaI();
+    }
+
+    // Getters
+    public ArrayList<Bloque> getForma() {
         return forma;
     }
 
-    public void ajustarCoordenadasCeldas(int origenPiezasI, int origenPiezasJ) {
-        if (this instanceof Linea) {
-            origenPiezasJ = 3;
-        }
-        for (Celda celda : forma) {
-            celda.setPosicion(origenPiezasI + celda.getCoordenadaI(), origenPiezasJ + celda.getCoordenadaJ());
-        }
-    }
-
-    private void ponerCoordenadasOrigenRelativo(int origenI, int origenJ) {
-        for (Celda celda : forma) {
-            celda.setCoordenadaI(origenI + celda.getCoordenadaI());
-            celda.setCoordenadaJ(origenJ + celda.getCoordenadaJ());
-        }
-    }
-
-    public boolean pertenece(Celda celda) {
-        return forma.contains(celda);
-    }
-
-    public void rotatarAntiHorario() {
-        int temp;
-        int coordRotacionI = Collections.min(forma, new comparePositionI()).getCoordenadaI();
-        int coordRotacionJ = Collections.min(forma, new comparePositionJ()).getCoordenadaJ();
-        if (horizontal) {
-            coordRotacionJ = coordRotacionJ + 1;
-        }
-        if (!horizontal) {
-            coordRotacionI = coordRotacionI + 1;
-        }
-        ponerCoordenadasOrigenRelativo(-coordRotacionI, -coordRotacionJ);
-        for (Celda celda : forma) {
-            temp = celda.getCoordenadaI();
-            celda.setPosicion(celda.getCoordenadaJ(),numeroFilas - 1 - temp);
-        }
-        ponerCoordenadasOrigenRelativo(coordRotacionI, coordRotacionJ);
-        horizontal = !horizontal;
-    }
-    // TODO: Componente cuadricula permita la rotacion de pieza activa
 }

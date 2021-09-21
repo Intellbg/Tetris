@@ -1,18 +1,14 @@
 package com.company;
 
-import com.company.DesktopGui.DesktopGui;
-import com.company.Tetris.GestorDeArchivos;
 import com.company.Tetris.Tetris;
 
 public class Main {
+
     public static void main(String[] args) {
-        System.out.println(GestorDeArchivos.obtenerMejoresJugadores());
-        Tetris.cargarJuego("Tetris_ELPIPO1800.txt");
-        DesktopGui desktopGui=new DesktopGui();
+        Tetris.iniciarSesion();
         while(!Tetris.verificarGameover()){
-            Tetris.ponerPiezaEnCuadricula();    
-            desktopGui.actualizarPanelProximasPiezas(Tetris.getProximasPiezas());
-            desktopGui.actualizarGridDeJuego(Tetris.getCuadricula());     
+            Tetris.ponerPiezaEnCuadricula();
+            System.out.println(Tetris.getCuadricula)    
             while(!Tetris.piezaActivaEstaColocada()){
                 if(!Tetris.estaPausado()){
                     try {
@@ -20,8 +16,7 @@ public class Main {
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
-                    Tetris.piezaActivaMovimientoPrincipal();        
-                    desktopGui.actualizarGridDeJuego(Tetris.getCuadricula());          
+                    Tetris.piezaActivaMovimientoPrincipal();                
                 }else{
                     System.out.println();
                 }
