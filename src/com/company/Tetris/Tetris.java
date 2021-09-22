@@ -7,13 +7,13 @@ import java.util.Random;
 import com.company.Tetris.TiposPieza.*;
 
 public class Tetris {
-    private static Cuadricula cuadricula;
-    private static ArrayList<Pieza> proximasPiezas = new ArrayList<>();
     private static Pieza piezaActiva;
     private static Pieza piezaGuardada;
+    private static Cuadricula cuadricula;
+    private static ArrayList<Pieza> proximasPiezas;
     private static Jugador jugador;
-    private static Boolean estaPausado;
-    private static Boolean gameOver;
+    private static boolean estaPausado;
+    private static boolean gameOver;
 
     // Metodos de configuracion y generacion
     public static void iniciarSesion(String nombreJugador) {
@@ -22,6 +22,7 @@ public class Tetris {
         jugador = new Jugador(nombreJugador);
         cuadricula = new Cuadricula();
         piezaGuardada = generarPieza();
+        proximasPiezas = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             proximasPiezas.add(generarPieza());
         }
@@ -33,6 +34,7 @@ public class Tetris {
         jugador = jugadorR;
         cuadricula = cuadriculaR;
         piezaGuardada = generarPieza();
+        proximasPiezas = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             proximasPiezas.add(generarPieza());
         }
@@ -184,6 +186,7 @@ public class Tetris {
     public static void guardarJuego() {
         cuadricula.ocultarPieza(piezaActiva);
         gameOver = true;
+        piezaActiva.marcarPiezaComoColocada();
         GestorDeArchivos.guardarPartida();
     }
 
@@ -225,12 +228,20 @@ public class Tetris {
     }
 
     public static void finalizarSesion() {
-        ArrayList<Jugador> mejoresJugadores=GestorDeArchivos.obtenerMejoresJugadores();
+        ArrayList<Jugador> mejoresJugadores = GestorDeArchivos.obtenerMejoresJugadores();
         mejoresJugadores.add(jugador);
-        mejoresJugadores.sort((a,b)->a.getPuntaje()-b.getPuntaje());
+        mejoresJugadores.sort((a, b) -> a.getPuntaje() - b.getPuntaje());
         Collections.reverse(mejoresJugadores);
         mejoresJugadores.remove(mejoresJugadores.size() - 1);
         GestorDeArchivos.guardarMejoresJugadores(mejoresJugadores);
+    }
+
+    public static ArrayList<Jugador> obtenerMejoresJugadores(){
+        return GestorDeArchivos.obtenerMejoresJugadores();
+    }
+
+    public static Pieza getPiezaGuardada(){
+        return piezaGuardada;
     }
 
 }

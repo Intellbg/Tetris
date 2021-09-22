@@ -1,5 +1,6 @@
 package com.company.Tetris;
 
+import java.awt.Color;
 import java.util.*;
 
 public abstract class Pieza {
@@ -120,12 +121,12 @@ public abstract class Pieza {
         return bloqueMasAlto.getCoordenadaJ();
     }
 
-    protected int obtenerCoordenadaMaximaJ() {
+    public int obtenerCoordenadaMaximaJ() {
         Bloque bloqueMasDerecho = Collections.max(forma, (a, b) -> a.getCoordenadaJ() - b.getCoordenadaJ());
         return bloqueMasDerecho.getCoordenadaJ();
     }
 
-    protected int obtenerCoordenadaMaximaI() {
+    public int obtenerCoordenadaMaximaI() {
         Bloque bloqueMasBajo = Collections.max(forma, (a, b) -> a.getCoordenadaI() - b.getCoordenadaI());
         return bloqueMasBajo.getCoordenadaI();
     }
@@ -133,6 +134,10 @@ public abstract class Pieza {
     // Getters
     public ArrayList<Bloque> getForma() {
         return forma;
+    }
+
+    public String getColor() {
+        return color;
     }
 
 }

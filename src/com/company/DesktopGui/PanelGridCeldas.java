@@ -3,44 +3,30 @@ package com.company.DesktopGui;
 import com.company.Tetris.*;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
 
-public class PanelGridCeldas extends JPanel{
+public class PanelGridCeldas extends JPanel {
     int numeroFilas;
     int numeroColumnas;
     PanelCelda[][] gridCeldas;
 
-    public PanelGridCeldas(int numeroFilas, int numeroColumnas) {
-        this.numeroColumnas = numeroColumnas;
-        this.numeroFilas = numeroFilas;
+    public PanelGridCeldas(Pieza pieza) {
+        setPreferredSize(new Dimension(180, 70));
+        this.numeroColumnas = pieza.obtenerCoordenadaMaximaJ() + 1;
+        this.numeroFilas = pieza.obtenerCoordenadaMaximaI() + 1;
         gridCeldas = new PanelCelda[numeroFilas][numeroColumnas];
-        setLayout(new GridLayout(numeroFilas + 2, numeroColumnas));
-        setPreferredSize(new Dimension(30 * numeroColumnas, 30 * numeroFilas));
-        inicializarGrid();
-        ajustarGrid();
-        addKeyListener(new Control());
-        setFocusable(true);
-    }
-
-    private void ajustarGrid() {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < numeroColumnas; j++) {
-                getComponent(i * numeroColumnas + j).setVisible(false);
-                add(new JPanel());
-            }
-        }
-    }
-
-    public PanelGridCeldas(Pieza pieza, Color color) {
-        this.numeroColumnas = 4;
-        this.numeroFilas = 4;
-        gridCeldas = new PanelCelda[numeroFilas][numeroColumnas];
-        // this.numeroColumnas = pieza.getNumeroColumnas() + 1;
-        // this.numeroFilas = pieza.getNumeroFilas() + 1;
         setLayout(new GridLayout(numeroFilas, numeroColumnas));
-        setPreferredSize(new Dimension(30 * numeroColumnas, 30 * numeroFilas));
-        inicializarGrid(color);
+        setMaximumSize(new Dimension(30 * numeroColumnas, 30 * numeroFilas));
+        inicializarGrid(Color.lightGray);
         mostrarPieza(pieza);
+    }
+
+    public PanelGridCeldas(Cuadricula cuadricula) {
+        this.numeroColumnas = cuadricula.NUMERO_COLUMNAS_MAXIMO;
+        this.numeroFilas = cuadricula.NUMERO_FILAS_MAXIMO - 2;
+        gridCeldas = new PanelCelda[numeroFilas][numeroColumnas];
+        setPreferredSize(new Dimension(40 * numeroColumnas, 40 * numeroFilas));
+        setLayout(new GridLayout(numeroFilas, numeroColumnas));
+        inicializarGrid();
     }
 
     private void inicializarGrid() {
@@ -67,9 +53,20 @@ public class PanelGridCeldas extends JPanel{
         }
     }
 
+    public void mostrarPiezaGridJuego(Pieza pieza) {
+        for (Bloque celda : pieza.getForma()) {
+            pintarCeldaGridJuego(celda);
+        }
+    }
+
     private void pintarCelda(Bloque celda) {
         gridCeldas[celda.getCoordenadaI()][celda.getCoordenadaJ()].cambiarColor(celda.getColor());
     }
+
+    private void pintarCeldaGridJuego(Bloque celda) {
+        gridCeldas[celda.getCoordenadaI()-2][celda.getCoordenadaJ()].cambiarColor(celda.getColor());
+    }
+
 
     public void actualizar(Cuadricula cuadricula) {
         Bloque[][] celdas = cuadricula.getBloques();
@@ -78,11 +75,11 @@ public class PanelGridCeldas extends JPanel{
 
         for (int i = 0; i < numeroFilas; i++) {
             for (int j = 0; j < numeroColumnas; j++) {
-                celda = celdas[i][j];
+                celda = celdas[i+2][j];
                 if (celda != null) {
-                    pintarCelda(celda);
+                    pintarCeldaGridJuego(celda);
                 } else {
-                    pintarCelda(new Bloque(i, j));
+                    pintarCeldaGridJuego(new Bloque(i+2, j));
                 }
             }
         }
@@ -91,8 +88,7 @@ public class PanelGridCeldas extends JPanel{
     public void resetCuadricula() {
         for (int i = 0; i < numeroFilas; i++) {
             for (int j = 0; j < numeroColumnas; j++) {
-                gridCeldas[i][j].cambiarColor("blanco");
-
+                gridCeldas[i][j].cambiarColor("negro");
             }
         }
         repaint();

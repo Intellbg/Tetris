@@ -42,6 +42,5 @@ public class PanelCelda extends JPanel{
                 setBackground(Color.black);
         }
         repaint();
-    }
-    
+    }    
 }

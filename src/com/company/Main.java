@@ -1,33 +1,17 @@
 package com.company;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import com.company.DesktopGui.DesktopGui;
-import com.company.Tetris.GestorDeArchivos;
-import com.company.Tetris.Tetris;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(GestorDeArchivos.obtenerMejoresJugadores());
-        Tetris.cargarJuego("Tetris_ELPIPO1800.txt");
-        DesktopGui desktopGui=new DesktopGui();
-        while(!Tetris.verificarGameover()){
-            Tetris.ponerPiezaEnCuadricula();    
-            desktopGui.actualizarPanelProximasPiezas(Tetris.getProximasPiezas());
-            desktopGui.actualizarGridDeJuego(Tetris.getCuadricula());     
-            while(!Tetris.piezaActivaEstaColocada()){
-                if(!Tetris.estaPausado()){
-                    try {
-                        Thread.sleep(Tetris.calcularVelocidadCaida());
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                    }
-                    Tetris.piezaActivaMovimientoPrincipal();        
-                    desktopGui.actualizarGridDeJuego(Tetris.getCuadricula());          
-                }else{
-                    System.out.println();
-                }
-            }
-            Tetris.asignarPuntaje();
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
         }
-        Tetris.finalizarSesion();
+        new DesktopGui();
     }
 }

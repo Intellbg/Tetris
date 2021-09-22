@@ -4,18 +4,15 @@ note "Esto es una matriz bidimencional de celdas donde las celdas que forman una
 
 hide circle
 
-class Jugador{
-    nivel:int
-    puntaje:int
-    nombre:String
-    setNivel()
-    setPuntaje()
-    getNombre()
-}
 class Tetris{
     - piezaActiva:Pieza
+    - piezaGuardada:Pieza
     - cuadricula:Cuadricula
     - proximasPiezas: ArrayList<Pieza> 
+    - jugador: Jugador
+    - estaPausado: boolean
+    - gameOver: boolean
+
 
     + iniciarSesion() 
     + ponerPiezaEnCuadricula():Pieza
@@ -37,6 +34,16 @@ class Tetris{
     guardarPuntaje()
     salir()
 }
+
+class Jugador{
+    nivel:int
+    puntaje:int
+    nombre:String
+    setNivel()
+    setPuntaje()
+    getNombre()
+}
+
 class Cuadricula{
     - NUMERO_FILAS_MAXIMO:int
     - NUMERO_COLUMNAS_MAXIMO :int

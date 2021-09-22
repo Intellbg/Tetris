@@ -35,8 +35,8 @@ public class GestorDeArchivos {
             manejador.close();
             Tetris.iniciarSesion(jugador, cuadricula);
         } catch (IOException | ClassNotFoundException e) {
-
-            e.printStackTrace();
+            System.out.println("No encontrado");
+            Tetris.iniciarSesion("Invitado");
         }
     }
     
