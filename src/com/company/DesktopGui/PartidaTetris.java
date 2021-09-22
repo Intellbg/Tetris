@@ -31,6 +31,7 @@ public class PartidaTetris extends Thread {
             Tetris.asignarPuntaje();
             tetrisDisplay.actualizarInformacion();
         }
+        Tetris.finalizarSesion();
         tetrisDisplay.alertarGameOver();
     }
 }
